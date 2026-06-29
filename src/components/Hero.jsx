@@ -1,5 +1,6 @@
 import profile from "../assets/knight.png";
 import { TypeAnimation } from "react-type-animation";
+import heroImage from "../assets/hero.png";
 
 function Hero() {
   return (
@@ -82,20 +83,24 @@ function Hero() {
           </div>
 
           {/* Right Side */}
-          <div className="flex justify-center">
-            <div className="relative group">
-              {/* Glow */}
-              <div className="absolute -inset-2 bg-gradient-to-r from-red-500 to-red-700 rounded-3xl blur-xl opacity-40 group-hover:opacity-70 transition duration-500"></div>
+          <div className="relative flex justify-center items-center">
+            {/* Red Glow */}
+            <div className="absolute w-[600px] h-[600px] bg-red-500/20 blur-[150px] rounded-full" />
 
-              {/* Image Card */}
-              <div className="relative bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800 shadow-2xl">
-                <img
-                  src={profile}
-                  alt="Rayyan"
-                  className="w-[420px] h-[520px] object-cover object-top transition duration-500 group-hover:scale-105"
-                />
-              </div>
-            </div>
+            {/* Floating Image */}
+            <img
+              src={heroImage}
+              alt="Developer"
+              className="
+      relative
+      z-10
+      w-[700px]
+      max-w-full
+      animate-float
+      select-none
+      pointer-events-none
+    "
+            />
           </div>
         </div>
       </div>

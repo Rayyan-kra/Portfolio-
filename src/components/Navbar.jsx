@@ -45,6 +45,15 @@ function Navbar() {
 
           <li>
             <a
+              href="#experience"
+              className="hover:text-red-500 transition duration-300"
+            >
+              Experience
+            </a>
+          </li>
+
+          <li>
+            <a
               href="#contact"
               className="hover:text-red-500 transition duration-300"
             >

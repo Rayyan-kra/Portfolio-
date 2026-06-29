@@ -1,197 +1,133 @@
-import { useState } from "react";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-
-import interviewImg from "../assets/projects/interview-ai.png";
-import shortImg from "../assets/projects/ai-short.png";
-import comingImg from "../assets/projects/coming-soon.png";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import aiInterview from "../assets/projects/ai-interview.png";
+import aiVideo from "../assets/projects/ai-video.png";
+import ecommerce from "../assets/projects/ecommerce.png";
+const projects = [
+  {
+    title: "AI Interview Platform",
+    description:
+      "AI-powered interview preparation platform with authentication, mock interviews, and instant feedback.",
+    tech: "React • Node.js • Express • MongoDB • AI",
+    live: "https://interview-ai-five-nu.vercel.app/",
+    image: aiInterview,
+  },
+  {
+    title: "AI-short video generator",
+    description:
+      "Modern AI-powered video generator with smooth animations, responsive design, and premium UI.",
+    tech: "React • Tailwind CSS • Framer Motion",
+    live: "#",
+    image: aiVideo,
+  },
+  {
+    title: "E-Commerce Platform",
+    description:
+      "Full-stack shopping platform with cart, authentication, admin dashboard, and payments.",
+    tech: "MERN Stack",
+    live: "#",
+    image: ecommerce,
+  },
+];
 
 function Projects() {
-  const projects = [
-    {
-      title: "Interview AI",
-      image: interviewImg,
-      description:
-        "AI-powered interview preparation platform with resume analysis, authentication, interview generation, and performance reports.",
-      tech: "React • Node.js • MongoDB • AI",
+  const [active, setActive] = useState(0);
 
-      live: "https://interview-ai-five-nu.vercel.app/",
-      github: "https://github.com/Rayyan-Kra",
-    },
+  useEffect(() => {
+    const onScroll = () => {
+      const section = document.getElementById("projects");
+      if (!section) return;
 
-    {
-      title: "AI Short Video Generator",
-      image: shortImg,
-      description:
-        "Generate short-form videos automatically using AI-powered content generation.",
+      const rect = section.getBoundingClientRect();
+      const total = projects.length;
 
-      tech: "React • Node.js • AI APIs",
+      const progress = Math.max(
+        0,
+        Math.min(1, -rect.top / (section.offsetHeight - window.innerHeight)),
+      );
 
-      live: "",
-      github: "https://github.com/Rayyan-Kra",
-    },
+      const index = Math.min(total - 1, Math.floor(progress * total));
 
-    {
-      title: "Next Project",
-      image: comingImg,
+      setActive(index);
+    };
 
-      description:
-        "Currently building my next full-stack application. Stay tuned for updates.",
+    window.addEventListener("scroll", onScroll);
+    onScroll();
 
-      tech: "Coming Soon",
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-      live: "",
-      github: "",
-    },
-  ];
-
-  const [current, setCurrent] = useState(0);
-
-  const nextProject = () => {
-    setCurrent((current + 1) % projects.length);
-  };
-
-  const prevProject = () => {
-    setCurrent((current - 1 + projects.length) % projects.length);
-  };
+  const project = projects[active];
 
   return (
-    <section
-      id="projects"
-      className="min-h-screen bg-[#0a0a0a] text-white py-24"
-    >
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Heading */}
-        <h1 className="text-7xl md:text-9xl font-black text-zinc-800">
-          PROJECTS
-        </h1>
-
-        <p className="text-red-500 uppercase tracking-[0.3em] mt-4 mb-12">
-          Featured Work
-        </p>
-
-        {/* Slider Card */}
-        <div className="relative">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden hover:border-red-500 transition duration-300">
-            <div className="grid md:grid-cols-2">
-              {/* Image */}
-              <div className="h-[300px] md:h-[500px] overflow-hidden">
-                <img
-                  src={projects[current].image}
-                  alt={projects[current].title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Content */}
-              <div className="p-10 flex flex-col justify-center">
-                <span className="text-red-500 uppercase tracking-widest mb-4">
-                  Project {current + 1}
-                </span>
-
-                <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                  {projects[current].title}
-                </h2>
-
-                <p className="text-zinc-400 leading-8 mb-6">
-                  {projects[current].description}
+    <section id="projects" className="relative h-[300vh] bg-[#0a0a0a]">
+      <div className="sticky top-0 h-screen flex items-center">
+        <div className="max-w-7xl mx-auto px-6 w-full">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Progress Bar */}
+            <div className="absolute right-10 top-1/2 -translate-y-1/2 h-40 w-[3px] bg-zinc-800 rounded-full overflow-hidden">
+              <div
+                className="bg-red-500 w-full transition-all duration-500"
+                style={{
+                  height: `${((active + 1) / projects.length) * 100}%`,
+                }}
+              />
+            </div>
+            {/* Left Content */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active}
+                initial={{ opacity: 0, y: 60 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -60 }}
+                transition={{ duration: 0.5 }}
+              >
+                <p className="text-red-500 uppercase tracking-[0.3em] mb-4">
+                  Project {active + 1}
                 </p>
 
-                <p className="text-red-500 font-medium mb-8">
-                  {projects[current].tech}
+                <h2 className="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
+                  {project.title}
+                </h2>
+
+                <p className="text-zinc-300 text-xl leading-9 mb-8">
+                  {project.description}
+                </p>
+
+                <p className="text-red-500 font-medium text-lg mb-10">
+                  {project.tech}
                 </p>
 
                 <div className="flex gap-4 flex-wrap">
-                  {projects[current].live ? (
-                    <a
-                      href={projects[current].live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="
-                        bg-red-500
-                        px-6
-                        py-3
-                        rounded-lg
-                        hover:bg-red-600
-                        transition
-                      "
-                    >
-                      Live Demo
-                    </a>
-                  ) : (
-                    <button
-                      disabled
-                      className="
-                        bg-zinc-700
-                        px-6
-                        py-3
-                        rounded-lg
-                        cursor-not-allowed
-                      "
-                    >
-                      Coming Soon
-                    </button>
-                  )}
-
-                  {projects[current].github && (
-                    <a
-                      href={projects[current].github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="
-                        border
-                        border-zinc-700
-                        px-6
-                        py-3
-                        rounded-lg
-                        hover:border-red-500
-                        transition
-                      "
-                    >
-                      GitHub
-                    </a>
-                  )}
+                  <a
+                    href={project.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-red-500 hover:bg-red-600 px-8 py-4 rounded-xl font-semibold transition"
+                  >
+                    Live Demo
+                  </a>
                 </div>
-              </div>
-            </div>
-          </div>
+              </motion.div>
+            </AnimatePresence>
 
-          {/* Navigation */}
-          <div className="flex justify-center gap-6 mt-10">
-            <button
-              onClick={prevProject}
-              className="
-                w-14
-                h-14
-                rounded-full
-                border
-                border-zinc-700
-                flex
-                items-center
-                justify-center
-                hover:border-red-500
-                transition
-              "
-            >
-              <FaArrowLeft />
-            </button>
-
-            <button
-              onClick={nextProject}
-              className="
-                w-14
-                h-14
-                rounded-full
-                border
-                border-zinc-700
-                flex
-                items-center
-                justify-center
-                hover:border-red-500
-                transition
-              "
-            >
-              <FaArrowRight />
-            </button>
+            {/* Right Preview */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`preview-${active}`}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.5 }}
+                className="h-[450px] rounded-3xl border border-zinc-800 bg-zinc-900 overflow-hidden"
+              >
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-fit"
+                />
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
       </div>
